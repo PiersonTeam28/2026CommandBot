@@ -1,19 +1,22 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.handlers.RobotStates;
 import frc.robot.Constants;
 import frc.robot.subsystems.TurretUtil;
 
-public class OperateTurret extends Command{
+public class Swivel extends Command{
     
     private final TurretUtil m_turret;
-    private final RobotStates.turretMotor m_turretState;
+    private final double m_speed;
+   // private final RobotStates.turretMotor m_turretState;
 
-    public OperateTurret(TurretUtil turret, RobotStates.turretMotor turretState){
+    public Swivel(TurretUtil turret, double speed){
         
         m_turret = turret;
-        m_turretState = turretState;
+        m_speed = speed;
+       // m_turretState = turretState;
 
         
         addRequirements(m_turret);
@@ -42,26 +45,10 @@ public class OperateTurret extends Command{
         //         break;
         // }
 
-    //      switch (m_turretState) {
-    //         case RIGHT:
-    //             m_turret.setTurretMotor(-1*Constants.SLOW, m_turretState);
-    //             break;
-    //         case LEFT:
-    //             m_turret.setTurretMotor(1*Constants.SLOW, m_turretState);
-    //             break;
-    //         case STOP:
-    //             m_turret.setTurretMotor(0, m_turretState);
-    //             break;
-    //         case MANUAL:
-    //             // In MANUAL mode, the speed is set directly by the joystick input
-    //             // so we don't need to change it here.
-    //             break;
-        
-    //         default:
-    //             m_turret.setTurretMotor(0, m_turretState);
-    //             break;
-    //     }
-        }
+        m_turret.setTurretMotor(m_speed);
+       // new PrintCommand("Turret Speed: " + m_speed);
+    
+    }
 
       // Called once the command ends or is interrupted.
     @Override

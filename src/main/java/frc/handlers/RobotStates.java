@@ -10,6 +10,7 @@ public class RobotStates {
     public enum turretMotor{
         RIGHT,
         LEFT,
+        MANUAL,
         STOP;
     }
 

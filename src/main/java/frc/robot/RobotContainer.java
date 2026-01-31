@@ -5,6 +5,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 
 import frc.handlers.RobotStates;
@@ -22,6 +23,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -44,13 +47,15 @@ public class RobotContainer {
         
         // drivetrain = TunerConstants.createDrivetrain();
         // logger = new Telemetry(Constants.MaxSpeed);
+      
         configureBindings();
-        // configureDefaultCommands();
-        // configureAutonomousModes();
+        configureDefaultCommands();
+        //configureAutonomousModes();
   }
 
   private void configureDefaultCommands() {
     //intakeUtil.setDefaultCommand(new OperateIntake(intakeUtil, RobotStates.intakeMotor.STOP));
+    //turretUtil.setDefaultCommand(new Swivel(turretUtil, 0));
   }
 
   //drivetrain.setDefaultCommand(
@@ -62,10 +67,25 @@ public class RobotContainer {
 
   private void configureBindings() {
     
-    joystick1.rightBumper().whileTrue(new OperateTurret(turretUtil, aTurretState.RIGHT)).whileFalse(new OperateTurret(turretUtil, aTurretState.STOP));
+    //joystick1.rightBumper().whileTrue(new OperateTurret(turretUtil, aTurretState.RIGHT)).whileFalse(new OperateTurret(turretUtil, aTurretState.STOP));
 
-    joystick1.leftBumper().whileTrue(new OperateTurret(turretUtil, aTurretState.LEFT)).whileFalse(new OperateTurret(turretUtil, aTurretState.STOP));
+    //joystick1.leftBumper().whileTrue(new OperateTurret(turretUtil, aTurretState.LEFT)).whileFalse(new OperateTurret(turretUtil, aTurretState.STOP));
 
+
+    //turretUtil.setTurretMotor(joystick1.getRightX());
+
+   // turretUtil.setDefaultCommand(new Swivel(turretUtil, joystick1.getRightX()));
+
+    joystick1.a().onTrue(new PrintCommand("a pressed!"));
+   //joystick1.axisMagnitudeGreaterThan(4,0.03).whileTrue((new PrintCommand("rx = "+ joystick1.getRightX())));
+   // turretUtil.setDefaultCommand(new Swivel(turretUtil, -joystick1.getRightX()));
+
+    //new RunCommand(() -> turretUtil.setTurretMotor(joystick1.getRightX()), turretUtil);
+    //turretUtil.setDefaultCommand(turretUtil.setTurretMotor(joystick1.getLeftX()));  // Commands.run(() -> turretUtil.setTurretMotor(joystick1.getRightX()), turretUtil);
+    
+
+    turretUtil.setDefaultCommand(
+      turretUtil.rotateTurret(() -> joystick1.getRightX()));
   }
 
 
