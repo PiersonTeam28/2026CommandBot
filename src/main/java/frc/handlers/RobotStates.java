@@ -1,5 +1,16 @@
 package frc.handlers;
 
-public enum RobotStates {
+public class RobotStates {
+
+    public enum intakeMotor {
+        INTAKING,
+        STOP;
+    }
+
+    public enum turretMotor{
+        RIGHT,
+        LEFT,
+        STOP;
+    }
 
 }
