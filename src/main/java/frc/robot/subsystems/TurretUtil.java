@@ -18,13 +18,36 @@ public class TurretUtil extends SubsystemBase {
     
     private TalonSRX turretMotor;
 
-    public TurretUtil(){
+    public TurretUtil() {
         turretMotor = new TalonSRX(Constants.TURRET);
     }
 
     
     public Command rotateTurret(DoubleSupplier speedSupplier) {
         return run(() -> this.setTurretMotor(speedSupplier.getAsDouble()));
+    }
+
+    public Command rotateDegrees(double degrees) {
+        return run(() -> {
+            double currentPosition = turretMotor.getSensorCollection().getPulseWidthPosition();
+            double targetPosition = currentPosition + (degrees/360.0 * 4096); // Assuming 1 unit = 1 degree, adjust as necessary
+            
+            // Simple proportional control loop
+            while (Math.abs(turretMotor.getSensorCollection().getPulseWidthPosition() - targetPosition) > 1) {
+                double error = targetPosition - turretMotor.getSensorCollection().getPulseWidthPosition();
+                double kP = 0.2; // Proportional gain, adjust as necessary
+                double output = kP * error;
+                output = Math.max(-0.5, Math.min(0.5, output)); // Limit output to [-0.5, 0.5]
+                turretMotor.set(TalonSRXControlMode.PercentOutput, output);
+            }
+            turretMotor.set(TalonSRXControlMode.PercentOutput, 0); // Stop the motor once target is reached
+        });
+    }
+
+
+
+    public Command readMotor(){
+        return run(() ->this.getMotorOutput() );
     }
 
 
@@ -62,6 +85,22 @@ public class TurretUtil extends SubsystemBase {
     public void setTurretMotor(double speed){
         //addRequirements();
         turretMotor.set(TalonSRXControlMode.PercentOutput, speed);
+    }
+
+    public double getEncoderPosition(){
+        return turretMotor.getSensorCollection().getPulseWidthPosition();
+    }
+
+    public double getAnalogPosition(){
+        return turretMotor.getSensorCollection().getAnalogInRaw();
+    }
+
+    public double getQuadraturePosition(){
+        return turretMotor.getSensorCollection().getQuadraturePosition();
+    }
+
+    public double getMotorOutput(){
+        return turretMotor.getMotorOutputPercent();
     }
 
    

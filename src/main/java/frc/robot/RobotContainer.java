@@ -76,16 +76,23 @@ public class RobotContainer {
 
    // turretUtil.setDefaultCommand(new Swivel(turretUtil, joystick1.getRightX()));
 
-    joystick1.a().onTrue(new PrintCommand("a pressed!"));
+    joystick1.a().onTrue(new PrintCommand("Encoder Position: " + turretUtil.getEncoderPosition() + " Analog Position: " + turretUtil.getAnalogPosition() + " Quadrature Position: " + turretUtil.getQuadraturePosition()));
    //joystick1.axisMagnitudeGreaterThan(4,0.03).whileTrue((new PrintCommand("rx = "+ joystick1.getRightX())));
    // turretUtil.setDefaultCommand(new Swivel(turretUtil, -joystick1.getRightX()));
 
     //new RunCommand(() -> turretUtil.setTurretMotor(joystick1.getRightX()), turretUtil);
     //turretUtil.setDefaultCommand(turretUtil.setTurretMotor(joystick1.getLeftX()));  // Commands.run(() -> turretUtil.setTurretMotor(joystick1.getRightX()), turretUtil);
     
+    joystick1.b().whileTrue(new PrintCommand("Motor Output: " + turretUtil.getMotorOutput()));
+
+    joystick1.x().whileTrue(new RunCommand(() -> turretUtil.rotateDegrees(180), turretUtil));
 
     turretUtil.setDefaultCommand(
       turretUtil.rotateTurret(() -> joystick1.getRightX()));
+    
+    //joystick1.b().onTrue(new InstantCommand(() -> turretUtil.rotateDegrees(180))).onFalse(new PrintCommand("angle: "+ turretUtil.getEncoderPosition()+" motor output: "+turretUtil.getMotorOutput()));
+    
+  
   }
 
 
