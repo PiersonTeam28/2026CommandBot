@@ -10,10 +10,11 @@ import edu.wpi.first.wpilibj2.command.Commands;
 
 import frc.handlers.RobotStates;
 
-import frc.robot.subsystems.IntakeUtil;
-import frc.robot.subsystems.TurretUtil;
 
 import frc.robot.commands.*;
+
+import static frc.robot.Constants.OperatorConstants.*;
+
 
 import edu.wpi.first.cameraserver.CameraServer;
 
@@ -32,12 +33,10 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
-public class RobotContainer {
-  private static RobotStates.intakeMotor aIntakeState;
-  private static RobotStates.turretMotor aTurretState;
+import frc.robot.subsystems.CANFuelSubsystem;
 
-  private final IntakeUtil intakeUtil = new IntakeUtil();
-  private final TurretUtil turretUtil = new TurretUtil();
+
+public class RobotContainer {
 
   private final CommandXboxController joystick0 = new CommandXboxController(0); //#This Joystick Controls The Driving(Will Also Control Elevator)
   private final CommandXboxController joystick1 = new CommandXboxController(1);//#This Joystick Controls The Intake System
@@ -50,8 +49,10 @@ public class RobotContainer {
       
         configureBindings();
         configureDefaultCommands();
+        //turretUtil.configureTurretMotor(); // Configure the turret motor controller so that we have data from the right encoder
         //configureAutonomousModes();
   }
+
 
   private void configureDefaultCommands() {
     //intakeUtil.setDefaultCommand(new OperateIntake(intakeUtil, RobotStates.intakeMotor.STOP));
@@ -66,49 +67,9 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    
-    //joystick1.rightBumper().whileTrue(new OperateTurret(turretUtil, aTurretState.RIGHT)).whileFalse(new OperateTurret(turretUtil, aTurretState.STOP));
 
-    //joystick1.leftBumper().whileTrue(new OperateTurret(turretUtil, aTurretState.LEFT)).whileFalse(new OperateTurret(turretUtil, aTurretState.STOP));
-
-
-    //turretUtil.setTurretMotor(joystick1.getRightX());
-
-   // turretUtil.setDefaultCommand(new Swivel(turretUtil, joystick1.getRightX()));
-
-    joystick1.a().onTrue(new PrintCommand("Encoder Position: " + turretUtil.getEncoderPosition() + " Analog Position: " + turretUtil.getAnalogPosition() + " Quadrature Position: " + turretUtil.getQuadraturePosition()));
-   //joystick1.axisMagnitudeGreaterThan(4,0.03).whileTrue((new PrintCommand("rx = "+ joystick1.getRightX())));
-   // turretUtil.setDefaultCommand(new Swivel(turretUtil, -joystick1.getRightX()));
-
-    //new RunCommand(() -> turretUtil.setTurretMotor(joystick1.getRightX()), turretUtil);
-    //turretUtil.setDefaultCommand(turretUtil.setTurretMotor(joystick1.getLeftX()));  // Commands.run(() -> turretUtil.setTurretMotor(joystick1.getRightX()), turretUtil);
-    
-    joystick1.b().whileTrue(new PrintCommand("Motor Output: " + turretUtil.getMotorOutput()));
-
-    joystick1.x().whileTrue(new RunCommand(() -> turretUtil.rotateDegrees(180), turretUtil));
-
-    turretUtil.setDefaultCommand(
-      turretUtil.rotateTurret(() -> joystick1.getRightX()));
-    
-    //joystick1.b().onTrue(new InstantCommand(() -> turretUtil.rotateDegrees(180))).onFalse(new PrintCommand("angle: "+ turretUtil.getEncoderPosition()+" motor output: "+turretUtil.getMotorOutput()));
-    
   
   }
 
 
-  public static void setTurretState(RobotStates.turretMotor state){
-    aTurretState = state;
-  }
-
-  public static RobotStates.turretMotor getTurretState() {
-    return aTurretState;
-  }
-
-  public static void setIntakeState(RobotStates.intakeMotor state){
-    aIntakeState = state;
-  }
-
-  public static RobotStates.intakeMotor getIntakeState() {
-    return aIntakeState;
-  }
 }
